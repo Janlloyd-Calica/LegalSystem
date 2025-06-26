@@ -1,0 +1,10 @@
+!!OBJECTIVES!!
+
+1. Store legal information in the LAIS
+
+2. user login for security
+
+3. integrate case sensitive search bar
+
+4. then log activity
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
