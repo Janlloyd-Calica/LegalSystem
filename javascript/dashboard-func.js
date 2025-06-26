@@ -1,3 +1,5 @@
+dashboard-func
+
 console.log("dashboard-func.js loaded!");
 document.addEventListener("DOMContentLoaded", () => {
   const sidebarToggleBtns = document.querySelectorAll(".sidebar-toggle");
