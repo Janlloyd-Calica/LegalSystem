@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --color-text-primary: #000000;
+  --color-text-placeholder: #ffffff;
+  --color-bg-primary: #ededed;
+  --color-bg-secondary: #DCD7C9;
+  --color-bg-sidebar: #ffffff;
+  --color-border-hr: #6d9773;
+  --color-hover-primary: #77B254;
+  --color-hover-secondary: #e2e2fb;
+  --color-shadow: rgba(0, 0, 0, 0.15);
+}
+
+body.dark-theme {
+  --color-text-primary: #F1F5F9;
+  --color-text-placeholder: #A6B7D2;
+  --color-bg-primary: #111827;
+  --color-bg-secondary: #3D4859;
+  --color-bg-sidebar: #1f2937;
+  --color-border-hr: #3B475C;
+  --color-hover-secondary: #48566a;
+  --color-shadow: rgba(0, 0, 0, 0.3);
+}
+
+body {
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+}
+
+/* Layout Containers */
+.container {
+  display: flex;
+}
+
+.container .main-content {
+  flex: 1;
+  padding: 30px;
+  color: var(--color-text-primary);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: var(--color-bg-sidebar);
+  height: 100vh;
+  transition: width 0.3s ease;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 6px var(--color-shadow);
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.sidebar-toggle .material-symbols-rounded {
+  font-size: 24px;
+}
+
+/* Menu */
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.menu-link:hover,
+.menu-link.active {
+  background-color: var(--color-hover-secondary);
+}
+
+.menu-link .material-symbols-rounded {
+  font-size: 24px;
+}
+
+.menu-label {
+  transition: opacity 0.3s, visibility 0.3s;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .menu-label {
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+  overflow: hidden;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 20px;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Page Title and Card */
+.main-content .page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.main-content .card {
+  border-radius: 8px;
+  padding: 20px;
+  background-color: var(--color-bg-sidebar);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Stylish Search Bar */
+.search-bar-container {
+  margin: 30px 0;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 5px 10px;
+  background-color: #fff;
+  max-width: 500px;
+}
+
+.search-wrapper input[type="text"] {
+  flex-grow: 1;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-wrapper .search-icon {
+  font-size: 24px;
+  color: #888;
+  margin-right: 8px;
+}
+
+.search-wrapper button {
+  padding: 10px 16px;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-wrapper button:hover {
+  background-color: #005c99;
+}
+
+/* Tables */
+table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+table th {
+  background-color: #f2f2f2;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container .main-content {
+    padding: 30px 20px;
+  }
+}

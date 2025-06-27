@@ -1,45 +1,52 @@
 <?php
 $pdo = require 'config.php';
 
-$q = isset($_GET['q']) ? trim($_GET['q']) : "";
+$search = $_GET['q'] ?? '';
 
-if ($q !== "") {
-    $stmt = $pdo->prepare("SELECT * FROM case_logs WHERE deleted = 0 AND (case_number LIKE ? OR case_title LIKE ? OR location LIKE ?) ORDER BY id DESC");
-    $stmt->execute(["%$q%", "%$q%", "%$q%"]);
-    $cases = $stmt->fetchAll();
+$stmt = $pdo->prepare("SELECT * FROM case_logs WHERE deleted = 0 AND (
+    case_number LIKE ? OR 
+    case_title LIKE ? OR 
+    location LIKE ?
+) ORDER BY id DESC");
+$likeSearch = "%$search%";
+$stmt->execute([$likeSearch, $likeSearch, $likeSearch]);
+$cases = $stmt->fetchAll();
+
+if (count($cases) === 0) {
+    echo "<p>No matching cases found.</p>";
 } else {
-    $cases = $pdo->query("SELECT * FROM case_logs WHERE deleted = 0 ORDER BY id DESC")->fetchAll();
+    echo "<table border='1' cellpadding='8' cellspacing='0' style='width: 100%; margin-top: 10px;'>";
+    echo "<tr>
+            <th>ID</th>
+            <th>Case Number</th>
+            <th>Case Title</th>
+            <th>Location</th>
+            <th>Log In</th>
+            <th>Log In Time</th>
+            <th>Log Out</th>
+            <th>Log Out Time</th>
+            <th>Action</th>
+        </tr>";
+
+    foreach ($cases as $case) {
+        echo "<tr>
+            <td>{$case['id']}</td>
+            <td>" . htmlspecialchars($case['case_number']) . "</td>
+            <td>" . htmlspecialchars($case['case_title']) . "</td>
+            <td>" . htmlspecialchars($case['location']) . "</td>
+            <td>" . htmlspecialchars($case['log_in_user']) . "</td>
+            <td>{$case['log_in_time']}</td>
+            <td>" . htmlspecialchars($case['log_out_user']) . "</td>
+            <td>{$case['log_out_time']}</td>
+            <td>
+                <form method='get' onsubmit=\"return confirm('Are you sure you want to delete this case?')\">
+                    <input type='hidden' name='delete' value='{$case['id']}'>
+                    <button type='submit' class='delete-btn' style='background:red;color:white;border:none;padding:5px 10px;'>Delete</button>
+                </form>
+            </td>
+        </tr>";
+    }
+
+    echo "</table>";
 }
 ?>
-
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Case Number</th>
-        <th>Case Title</th>
-        <th>Location</th>
-        <th>Log In</th>
-        <th>Log In Time</th>
-        <th>Log Out</th>
-        <th>Log Out Time</th>
-        <th>Action</th>
-    </tr>
-    <?php foreach ($cases as $case): ?>
-    <tr>
-        <td><?= $case['id'] ?></td>
-        <td><?= htmlspecialchars($case['case_number']) ?></td>
-        <td><?= htmlspecialchars($case['case_title']) ?></td>
-        <td><?= htmlspecialchars($case['location']) ?></td>
-        <td><?= htmlspecialchars($case['log_in_user']) ?></td>
-        <td><?= htmlspecialchars($case['log_in_time']) ?></td>
-        <td><?= htmlspecialchars($case['log_out_user']) ?></td>
-        <td><?= htmlspecialchars($case['log_out_time']) ?></td>
-        <td>
-            <form method="get" onsubmit="return confirm('Are you sure you want to delete this case?');">
-                <input type="hidden" name="delete" value="<?= $case['id'] ?>">
-                <button type="submit" class="delete-btn">Delete</button>
-            </form>
-        </td>
-    </tr>
-    <?php endforeach; ?>
-</table>

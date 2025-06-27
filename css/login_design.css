@@ -8,7 +8,7 @@
 body{
   min-height: 100vh;
   width: 100%;
-  background: #0c3b2e;
+  background: #0d1b2a;
 }
 .container{
   position: absolute;
@@ -97,6 +97,6 @@ body{
   padding-top: 20px;
   display: block;
   margin: 0 auto; /* 0 top/bottom, auto left/right */
-  width: 150px;
+  width: 145px;
   height: 160px; /* or height: auto for proportional scaling */
 }
