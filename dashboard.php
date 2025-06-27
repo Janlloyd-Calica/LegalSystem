@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 $host = 'localhost';
@@ -32,12 +33,7 @@ try {
 
   </head>
 <body>
-  <!-- Navbar -->
-  <nav class="site-nav">
-    <button class="sidebar-toggle">
-      <span class="material-symbols-rounded">menu</span>
-    </button>
-  </nav>
+  
   <div class="container">
     <!-- Sidebar -->
     <?php include 'sidebar.php'; ?>
