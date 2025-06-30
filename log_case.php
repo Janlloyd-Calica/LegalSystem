@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!-- HTML Form -->
 <h2>Log New Case</h2>
 <form method="post">
-    <label>Case Number:</label><br>
+    <label>Case:</label><br>
     <input type="text" name="case_number" required><br><br>
 
     <label>Case Title:</label><br>
