@@ -1,4 +1,5 @@
 <aside class="sidebar">
+<aside class="sidebar">
   <div class="sidebar-header">
     <img src="img/prc-logo.png" alt="Logo" class="header-logo" />
   </div>
