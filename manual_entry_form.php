@@ -59,32 +59,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_submit'])) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sidebar Menu | LAIS</title>
+    <title>Manual Case Entry | LAIS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
 
     <link rel="icon" type="image/png" href="img/prc-car.png" sizes="1200x1200"/>
-     <link href="css/dashboard.css" rel="stylesheet"> <!-- DND -->
-    <link rel="stylesheet" href="css/sidebar.css">  <!-- DND -->
-<script src="js/sidebar.js" defer></script>
+    <link href="css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <script src="js/sidebar.js" defer></script>
 
 <style>
-/* Enhanced Main Content Styles */
+/* Base styles and reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+
+/* Permanent sidebar styles */
+.sidebar {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 280px !important;
+    height: 100vh !important;
+    z-index: 1000;
+    transition: none !important;
+    transform: none !important;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    padding-left: 280px; /* Account for fixed sidebar width */
+}
+
+/* Enhanced Main Content Styles with improved responsiveness */
 .main-content {
-    padding: 30px;
+    flex: 1;
+    padding: clamp(20px, 4vw, 30px);
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
 }
 
 .page-title {
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
     font-weight: 700;
     color: #2c3e50;
-    margin-bottom: 30px;
+    margin-bottom: clamp(20px, 3vw, 30px);
     text-align: center;
     text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     position: relative;
+    word-wrap: break-word;
 }
 
 .page-title::after {
@@ -93,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_submit'])) {
     bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
+    width: clamp(60px, 15vw, 80px);
     height: 4px;
     background: linear-gradient(90deg, #3498db, #2980b9);
     border-radius: 2px;
@@ -101,12 +140,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_submit'])) {
 
 .card {
     background: white;
-    border-radius: 20px;
-    padding: 40px;
+    border-radius: clamp(15px, 3vw, 20px);
+    padding: clamp(25px, 5vw, 40px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.2);
-    max-width: 600px;
+    max-width: min(600px, 95vw);
+    width: 100%;
     margin: 0 auto;
     position: relative;
     overflow: hidden;
@@ -133,23 +173,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_submit'])) {
 .manual-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: clamp(15px, 3vw, 20px);
 }
 
 .form-group {
     position: relative;
+    width: 100%;
 }
 
 .form-group input {
     width: 100%;
-    padding: 15px 20px;
+    padding: clamp(12px, 2.5vw, 15px) clamp(15px, 3vw, 20px);
     border: 2px solid #e0e6ed;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: clamp(14px, 2.5vw, 16px);
     font-family: 'Poppins', sans-serif;
     transition: all 0.3s ease;
     background: #f8f9fa;
     color: #2c3e50;
+    box-sizing: border-box;
 }
 
 .form-group input:focus {
@@ -174,8 +216,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_submit'])) {
     background: linear-gradient(135deg, #3498db, #2980b9);
     color: white;
     border: none;
-    padding: 18px 40px;
-    font-size: 18px;
+    padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);
+    font-size: clamp(16px, 2.5vw, 18px);
     font-weight: 600;
     border-radius: 12px;
     cursor: pointer;
@@ -183,9 +225,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_submit'])) {
     font-family: 'Poppins', sans-serif;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-top: 20px;
+    margin-top: clamp(15px, 3vw, 20px);
     position: relative;
     overflow: hidden;
+    align-self: center;
+    min-width: 150px;
 }
 
 .submit-btn::before {
@@ -214,29 +258,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_submit'])) {
     box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .main-content {
-        padding: 20px;
+/* Success message styles */
+.success-message {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+    padding: clamp(12px, 2.5vw, 15px) clamp(15px, 3vw, 20px);
+    border-radius: 12px;
+    margin-bottom: clamp(15px, 3vw, 20px);
+    text-align: center;
+    font-weight: 500;
+    animation: slideIn 0.5s ease;
+    font-size: clamp(14px, 2.5vw, 16px);
+}
+
+/* Error message styles */
+.error-message {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    padding: clamp(12px, 2.5vw, 15px) clamp(15px, 3vw, 20px);
+    border-radius: 12px;
+    margin-bottom: clamp(15px, 3vw, 20px);
+    text-align: center;
+    font-weight: 500;
+    animation: slideIn 0.5s ease;
+    font-size: clamp(14px, 2.5vw, 16px);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
     }
-    
-    .page-title {
-        font-size: 2rem;
-    }
-    
-    .card {
-        padding: 30px 20px;
-        margin: 0 10px;
-    }
-    
-    .form-group input {
-        padding: 12px 15px;
-        font-size: 14px;
-    }
-    
-    .submit-btn {
-        padding: 15px 30px;
-        font-size: 16px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -265,56 +320,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_submit'])) {
     100% { transform: translateY(-50%) rotate(360deg); }
 }
 
-/* Success message styles */
-.success-message {
-    background: linear-gradient(135deg, #27ae60, #2ecc71);
-    color: white;
-    padding: 15px 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: 500;
-    animation: slideIn 0.5s ease;
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 250px; /* Smaller sidebar on tablets */
+    }
+    
+    .sidebar {
+        width: 250px !important;
+    }
+    
+    .main-content {
+        padding: 15px;
+    }
+    
+    .card {
+        margin: 0;
+        border-radius: 15px;
+    }
 }
 
-/* Error message styles */
-.error-message {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-    color: white;
-    padding: 15px 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: 500;
-    animation: slideIn 0.5s ease;
+@media (max-width: 480px) {
+    .container {
+        padding-left: 200px; /* Even smaller sidebar on mobile */
+    }
+    
+    .sidebar {
+        width: 200px !important;
+    }
+    
+    .main-content {
+        padding: 10px;
+    }
+    
+    .card {
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
+/* High DPI / Zoom adjustments */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .page-title {
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    
+    .card {
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
     }
+}
+
+/* Ensure no horizontal scroll */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 100vw;
 }
 </style>
 
   </head>
 <body>
-  <!-- Navbar -->
-  <nav class="site-nav">
-    <button class="sidebar-toggle">
-      <span class="material-symbols-rounded">menu</span>
-    </button>
-  </nav>
+  <!-- No navbar needed - sidebar is permanent -->
+  
   <div class="container">
     <!-- Sidebar -->
     <?php include 'sidebar.php'; ?>
     
-    
-<!-- Main Content -->
+    <!-- Main Content -->
     <main class="main-content">
       <h1 class="page-title">Manual Case Entry</h1>
       
@@ -362,20 +437,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manual_submit'])) {
     </main>
   </div>
     
-
   <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const sidebar = document.querySelector(".sidebar");
-  const toggleBtn = document.querySelector(".sidebar-toggle");
-
-  if (toggleBtn && sidebar) {
-    toggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("collapsed");
-      toggleBtn.querySelector("span").textContent =
-        sidebar.classList.contains("collapsed") ? "chevron_right" : "chevron_left";
-    });
-  }
-
   // Add form submission animation
   const form = document.querySelector('.manual-form');
   const submitBtn = document.querySelector('.submit-btn');
@@ -388,6 +451,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
-</div>
 </body>
 </html>
