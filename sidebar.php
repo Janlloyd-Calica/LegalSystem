@@ -5,6 +5,8 @@
     <li><a href="manual_entry_form.php" class="menu-link" data-tooltip="Notifications"><span class="material-symbols-rounded">info</span><span class="menu-label">MANUAL</span></a></li>
     <li><a href="upload.php" class="menu-link" data-tooltip="Favourites"><span class="material-symbols-rounded">upload</span><span class="menu-label">UPLOAD</span></a></li>
     <li><a href="printing.php" class="menu-link" data-tooltip="printing"><span class="material-symbols-rounded">print</span><span class="menu-label">PRINTING </span></a></li>
+    <li><a href="deleted_cases.php" class="menu-link" data-tooltip="printing"><span class="material-symbols-rounded">archive</span><span class="menu-label">ARCHIVE </span></a></li>
+     
     <li>
       <a href="logout.php"
          class="menu-link"
