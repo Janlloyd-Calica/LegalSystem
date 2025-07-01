@@ -34,7 +34,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     $id = (int) $_GET['delete'];
     $stmt = $pdo->prepare("UPDATE case_logs SET deleted = 1, deleted_at = NOW() WHERE id = ?");
     if ($stmt->execute([$id])) {
-        $_SESSION['message'] = "❌ Case ID $id soft-deleted.";
+        $_SESSION['message'] = "❌ Case ID $id deleted.";
         header("Location: dashboard.php");
         exit;
     } else {
