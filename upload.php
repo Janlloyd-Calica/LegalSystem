@@ -5,44 +5,114 @@ require_once 'functions.php';
 $message = '';
 $redirect = false;
 
-if (isset($_POST['upload_csv']) && !empty($_FILES['csv_file']['tmp_name'])) {
-    $file = fopen($_FILES['csv_file']['tmp_name'], 'r');
-    $rowCount = 0;
-    $insertCount = 0;
+// Define expected DB fields and possible header aliases
+$fieldMap = [
+    'case_number'   => ['case number', 'case no', 'number', 'no.'],
+    'case_title'    => ['case title', 'title', 'case name', 'case'],
+    'location'      => ['location', 'area', 'place'],
+    'log_in_user'   => ['login user', 'in name', 'login name', 'in | name'],
+    'log_in_time'   => ['login time', 'date & time', 'in | time'],
+    'log_out_user'  => ['logout user', 'out name', 'logout name', 'out | name'],
+    'log_out_time'  => ['logout time', 'date out', 'out | time']
+];
 
-    // Skip header
-    fgetcsv($file);
+// Normalize header names
+function normalize($str) {
+    return strtolower(trim(preg_replace('/[^a-z0-9]+/i', ' ', $str)));
+}
 
-    while (($row = fgetcsv($file)) !== false) {
-        $rowCount++;
-
-        if (count($row) < 7) continue;
-
-        [$case_number, $case_title, $location, $log_in_user, $log_in_time, $log_out_user, $log_out_time] = $row;
-
-        // Require all fields
-        if (empty($case_number) || empty($case_title) || empty($location) ||
-            empty($log_in_user) || empty($log_in_time) || empty($log_out_user) || empty($log_out_time)) {
-            continue;
-        }
-
-        // Check for duplicates
-        $check = $pdo->prepare("SELECT COUNT(*) FROM case_logs WHERE case_number = ?");
-        $check->execute([$case_number]);
-
-        if ($check->fetchColumn() == 0) {
-            $stmt = $pdo->prepare("INSERT INTO case_logs 
-                (case_number, case_title, location, log_in_user, log_in_time, log_out_user, log_out_time)
-                VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$case_number, $case_title, $location, $log_in_user, $log_in_time, $log_out_user, $log_out_time]);
-            $insertCount++;
+// Map CSV headers to database fields
+function mapHeaders($headers, $fieldMap) {
+    $mapped = [];
+    foreach ($headers as $index => $header) {
+        $normalized = normalize($header);
+        foreach ($fieldMap as $dbField => $aliases) {
+            if (in_array($normalized, array_map('normalize', $aliases))) {
+                $mapped[$dbField] = $index;
+                break;
+            }
         }
     }
+    return $mapped;
+}
 
-    fclose($file);
-    logActivity($pdo, 'Admin', "Uploaded CSV file with $insertCount new cases", $_SERVER['REMOTE_ADDR']);
-    $message = "✅ $insertCount new case(s) uploaded successfully.";
-    $redirect = true; // trigger JS redirect
+// Convert to MySQL datetime format
+function parseDateTime($str) {
+    $formats = ['m/d/Y h:i A', 'Y-m-d H:i:s', 'd-m-Y H:i', 'Y/m/d H:i:s', 'm/d/Y H:i'];
+    foreach ($formats as $format) {
+        $dt = DateTime::createFromFormat($format, $str);
+        if ($dt && $dt->format($format) === $str) {
+            return $dt->format('Y-m-d H:i:s');
+        }
+    }
+    $fallback = strtotime($str);
+    return $fallback !== false ? date('Y-m-d H:i:s', $fallback) : null;
+}
+
+if (isset($_POST['upload_csv']) && !empty($_FILES['csv_file']['tmp_name'])) {
+    $file = fopen($_FILES['csv_file']['tmp_name'], 'r');
+    if ($file === false) {
+        $message = "❌ Failed to open uploaded file.";
+    } else {
+        $headerRow = fgetcsv($file);
+        $columnMap = mapHeaders($headerRow, $fieldMap);
+
+        $requiredFields = ['case_number', 'case_title', 'location', 'log_in_user', 'log_in_time', 'log_out_user', 'log_out_time'];
+        $missing = array_diff($requiredFields, array_keys($columnMap));
+
+        if (!empty($missing)) {
+            $message = "⚠️ Missing required fields: " . implode(', ', $missing);
+        } else {
+            $rowCount = 0;
+            $insertCount = 0;
+            $skippedInvalidDate = 0;
+
+            while (($row = fgetcsv($file)) !== false) {
+                $rowCount++;
+
+                $case_number   = trim($row[$columnMap['case_number']] ?? '');
+                $case_title    = trim($row[$columnMap['case_title']] ?? '');
+                $location      = trim($row[$columnMap['location']] ?? '');
+                $log_in_user   = trim($row[$columnMap['log_in_user']] ?? '');
+                $log_out_user  = trim($row[$columnMap['log_out_user']] ?? '');
+                $log_in_time_raw = trim($row[$columnMap['log_in_time']] ?? '');
+                $log_out_time_raw = trim($row[$columnMap['log_out_time']] ?? '');
+
+                $log_in_time = parseDateTime($log_in_time_raw);
+                $log_out_time = parseDateTime($log_out_time_raw);
+
+                if (
+                    !$case_number || !$case_title || !$location || !$log_in_user ||
+                    !$log_in_time || !$log_out_user || !$log_out_time
+                ) {
+                    $skippedInvalidDate++;
+                    continue;
+                }
+
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM case_logs WHERE case_number = ?");
+                $stmt->execute([$case_number]);
+                if ($stmt->fetchColumn() > 0) continue;
+
+                $insert = $pdo->prepare("INSERT INTO case_logs 
+                    (case_number, case_title, location, log_in_user, log_in_time, log_out_user, log_out_time)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $insert->execute([
+                    $case_number, $case_title, $location,
+                    $log_in_user, $log_in_time, $log_out_user, $log_out_time
+                ]);
+
+                $insertCount++;
+            }
+
+            fclose($file);
+            logActivity($pdo, 'Admin', "Uploaded CSV with $insertCount new case(s)", $_SERVER['REMOTE_ADDR']);
+            $message = "✅ $insertCount case(s) uploaded successfully.";
+            if ($skippedInvalidDate > 0) {
+                $message .= "<br>⏳ Skipped $skippedInvalidDate row(s) due to invalid or missing datetime.";
+            }
+            $redirect = true;
+        }
+    }
 } else if (isset($_POST['upload_csv'])) {
     $message = "⚠️ No file uploaded.";
 }
@@ -53,7 +123,6 @@ if (isset($_POST['upload_csv']) && !empty($_FILES['csv_file']['tmp_name'])) {
 <head>
   <meta charset="UTF-8">
   <title>Upload Case Logs (.CSV)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
@@ -179,7 +248,7 @@ if (isset($_POST['upload_csv']) && !empty($_FILES['csv_file']['tmp_name'])) {
 
     <?php if (!empty($message)): ?>
       <div class="message <?= strpos($message, '✅') !== false ? 'success' : 'error' ?>">
-        <?= htmlspecialchars($message) ?>
+        <?= $message ?>
       </div>
     <?php endif; ?>
 
@@ -208,7 +277,6 @@ if (isset($_POST['upload_csv']) && !empty($_FILES['csv_file']['tmp_name'])) {
     });
 
     <?php if ($redirect): ?>
-    // Redirect after 3 seconds
     setTimeout(() => {
       window.location.href = "dashboard.php";
     }, 3000);

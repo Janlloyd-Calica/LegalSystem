@@ -536,7 +536,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="receipt">
                     <!-- Header -->
                     <div class="receipt-header">
-                        <img src="img/prc_logo_b&w.png" alt="PRC Logo" class="prc-logo">
+                        <img src="img/prc-logo.png" alt="PRC Logo" class="prc-logo">
                         <div class="receipt-title">Professional Regulation Commission</div>
                         <div class="receipt-subtitle">CHARGE OUT RECEIPT FOR DOCKETED CASES</div>
                         <div class="department">

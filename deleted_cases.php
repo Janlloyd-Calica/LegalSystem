@@ -24,7 +24,7 @@ if (isset($_GET['restore']) && is_numeric($_GET['restore'])) {
         exit;
     } else {
         $_SESSION['message'] = "❌ Failed to restore case.";
-        header("Location: dashboard.php#deleted");
+        header("Location: deleted_cases.php#deleted");
         exit;
     }
 }
