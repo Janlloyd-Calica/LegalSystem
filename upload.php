@@ -13,7 +13,7 @@ $fieldMap = [
   'log_in_user'   => ['login user', 'in name', 'login name', 'in | name'],
   'log_in_time'   => ['login time', 'date & time', 'in | time'],
   'log_out_user'  => ['logout user', 'out name', 'logout name', 'out | name'],
-  'log_out_time'  => ['logout time', 'date out', 'out | time']
+  'log_out_time'  => ['logout time', 'date out', 'out | time', 'date & time'],
 ];
 
 function normalize($str) {
@@ -54,26 +54,33 @@ if (isset($_POST['upload_csv']) && !empty($_FILES['csv_file']['tmp_name'])) {
     $headerRow = fgetcsv($file);
     $columnMap = mapHeaders($headerRow, $fieldMap);
 
-    $requiredFields = ['case_number', 'case_title', 'location', 'log_in_user', 'log_in_time', 'log_out_user', 'log_out_time'];
+    $requiredFields = ['case_number', 'case_title', 'location'];
     $missing = array_diff($requiredFields, array_keys($columnMap));
 
     if (!empty($missing)) {
       $message = "⚠️ Missing required fields: " . implode(', ', $missing);
     } else {
       $insertCount = 0;
-      $skippedInvalidDate = 0;
+      $skippedInvalid = 0;
 
       while (($row = fgetcsv($file)) !== false) {
         $case_number = trim($row[$columnMap['case_number']] ?? '');
         $case_title = trim($row[$columnMap['case_title']] ?? '');
         $location = trim($row[$columnMap['location']] ?? '');
-        $log_in_user = trim($row[$columnMap['log_in_user']] ?? '');
-        $log_out_user = trim($row[$columnMap['log_out_user']] ?? '');
-        $log_in_time = parseDateTime(trim($row[$columnMap['log_in_time']] ?? ''));
-        $log_out_time = parseDateTime(trim($row[$columnMap['log_out_time']] ?? ''));
 
-        if (!$case_number || !$case_title || !$location || !$log_in_user || !$log_in_time || !$log_out_user || !$log_out_time) {
-          $skippedInvalidDate++;
+        $log_in_user = isset($columnMap['log_in_user']) ? trim($row[$columnMap['log_in_user']] ?? '') : '';
+        $log_out_user = isset($columnMap['log_out_user']) ? trim($row[$columnMap['log_out_user']] ?? '') : '';
+        $log_in_time = isset($columnMap['log_in_time']) ? parseDateTime(trim($row[$columnMap['log_in_time']] ?? '')) : null;
+        $log_out_time = isset($columnMap['log_out_time']) ? parseDateTime(trim($row[$columnMap['log_out_time']] ?? '')) : null;
+
+        // Auto-fill values if missing
+        $log_in_user = $log_in_user ?: 'N/A';
+        $log_out_user = $log_out_user ?: 'N/A';
+        $log_in_time = $log_in_time ?: date('Y-m-d H:i:s');
+        $log_out_time = $log_out_time ?: date('Y-m-d H:i:s');
+
+        if (!$case_number || !$case_title || !$location) {
+          $skippedInvalid++;
           continue;
         }
 
@@ -95,8 +102,8 @@ if (isset($_POST['upload_csv']) && !empty($_FILES['csv_file']['tmp_name'])) {
       fclose($file);
       logActivity($pdo, 'Admin', "Uploaded CSV with $insertCount new case(s)", $_SERVER['REMOTE_ADDR']);
       $message = "✅ $insertCount case(s) uploaded successfully.";
-      if ($skippedInvalidDate > 0) {
-        $message .= "<br>⏳ Skipped $skippedInvalidDate row(s) due to invalid or missing datetime.";
+      if ($skippedInvalid > 0) {
+        $message .= "<br>⚠️ Skipped $skippedInvalid row(s) due to missing required fields.";
       }
       $redirect = true;
     }

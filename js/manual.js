@@ -2,14 +2,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const sidebarToggle = document.getElementById("toggleSidebar");
   const sidebar = document.querySelector(".sidebar");
 
-  // Sidebar toggle functionality
+  // Sidebar toggle
   if (sidebarToggle && sidebar) {
     sidebarToggle.addEventListener("click", () => {
       sidebar.classList.toggle("collapsed");
     });
   }
 
-  // Manual menu link navigation handler
+  // Manual menu navigation (if needed)
   const menuLinks = document.querySelectorAll(".menu-link");
 
   menuLinks.forEach(link => {
@@ -17,11 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const href = link.getAttribute("href");
 
       if (href && href !== "#") {
-        // Manually navigate to the page
         event.preventDefault();
         window.location.href = href;
       } else {
-        // Optional: Log or handle unlinked items
         event.preventDefault();
         console.warn("No navigation target set for:", link);
       }
