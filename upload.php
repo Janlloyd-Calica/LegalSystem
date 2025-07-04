@@ -117,34 +117,86 @@ if (isset($_POST['upload_csv']) && !empty($_FILES['csv_file']['tmp_name'])) {
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Upload Case Logs | LAIS</title>
+  <title>Upload Case Logs | LAWS</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" />
-  <link rel="icon" type="image/png" href="img/prc-car.png" />
+  <link rel="icon" type="image/png" href="img/prc-logo.png" sizes="1200x1200"/>
   <link rel="stylesheet" href="css/sidebar.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
   <style>
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+
     .upload-box {
       background: #fff;
-      padding: 40px;
-      border-radius: 16px;
-      max-width: 600px;
+      padding: 60px;
+      border-radius: 20px;
+      max-width: 700px;
       width: 100%;
-      margin: 40px auto;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #3498db, #2980b9, #8e44ad, #9b59b6);
+      background-size: 400% 400%;
+      animation: gradient 3s ease infinite;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .upload-box h2 {
       text-align: center;
       color: #2c3e50;
-      margin-bottom: 30px;
-      font-size: 1.8rem;
+      margin-bottom: 40px;
+      font-size: 2.2rem;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .upload-box h2::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #3498db, #2980b9);
+      border-radius: 2px;
     }
 
     .upload-box form {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 30px;
     }
 
     input[type="file"] {
@@ -156,70 +208,173 @@ if (isset($_POST['upload_csv']) && !empty($_FILES['csv_file']['tmp_name'])) {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 30px;
-      border: 2px dashed #3498db;
-      border-radius: 12px;
+      padding: 50px 30px;
+      border: 3px dashed #3498db;
+      border-radius: 16px;
       cursor: pointer;
-      background: #f9fcff;
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
       text-align: center;
+      transition: all 0.3s ease;
+      min-height: 180px;
     }
 
     .file-label:hover {
-      background: #eef7fd;
+      background: linear-gradient(135deg, #e9ecef, #dee2e6);
       border-color: #2980b9;
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(52, 152, 219, 0.2);
     }
 
     .file-label span {
-      font-size: 2rem;
+      font-size: 3.5rem;
       color: #3498db;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .file-label:hover span {
+      transform: scale(1.1);
     }
 
     .file-label strong {
       color: #2c3e50;
       font-weight: 600;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .small-text {
+      color: #7f8c8d;
+      font-size: 1rem;
+      margin-top: 5px;
     }
 
     .upload-box button {
-      padding: 14px;
-      background: linear-gradient(to right, #3498db, #2980b9);
+      padding: 20px 40px;
+      background: linear-gradient(135deg, #3498db, #2980b9);
       color: white;
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 600;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.3s;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .upload-box button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .upload-box button:hover::before {
+      left: 100%;
     }
 
     .upload-box button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(52, 152, 219, 0.4);
+      background: linear-gradient(135deg, #2980b9, #3498db);
+    }
+
+    .upload-box button:active {
+      transform: translateY(-1px);
     }
 
     .message {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 10px;
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 12px;
       text-align: center;
       font-weight: 500;
+      font-size: 1.1rem;
+      animation: slideIn 0.5s ease;
     }
 
     .success {
-      background-color: #d4edda;
-      color: #155724;
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
+      color: white;
     }
 
     .error {
-      background-color: #f8d7da;
-      color: #721c24;
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: white;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .tip {
-      margin-top: 10px;
-      font-size: 0.85rem;
+      margin-top: 25px;
+      font-size: 1rem;
       text-align: center;
       color: #7f8c8d;
+      padding: 15px;
+      background: rgba(127, 140, 141, 0.1);
+      border-radius: 10px;
+      border-left: 4px solid #3498db;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .upload-box {
+        padding: 40px 30px;
+        max-width: 90%;
+      }
+      
+      .upload-box h2 {
+        font-size: 1.8rem;
+      }
+      
+      .file-label {
+        padding: 30px 20px;
+        min-height: 150px;
+      }
+      
+      .file-label span {
+        font-size: 2.5rem;
+      }
+      
+      .file-label strong {
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .upload-box {
+        padding: 30px 20px;
+      }
+      
+      .upload-box h2 {
+        font-size: 1.5rem;
+      }
+      
+      .file-label {
+        padding: 25px 15px;
+        min-height: 120px;
+      }
+      
+      .file-label span {
+        font-size: 2rem;
+      }
     }
   </style>
   <script src="js/sidebar.js" defer></script>

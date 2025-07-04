@@ -47,10 +47,10 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | LAIS</title>
+  <title>Dashboard | LAWS</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" />
-  <link rel="icon" href="img/prc-car.png" type="image/png" />
+  <link rel="icon" type="image/png" href="img/prc-logo.png" sizes="1200x1200"/>
   <link rel="stylesheet" href="css/sidebar.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
   <script src="js/sidebar.js" defer></script>

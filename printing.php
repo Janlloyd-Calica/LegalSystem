@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print PRC Legal Receipt | LAIS</title>
+    <title>Print PRC Legal Receipt | LAWS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="img/prc-logo.png" sizes="1200x1200"/>
@@ -493,6 +493,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="text" id="receiving_staff" name="receiving_staff" 
                                    value="<?php echo $print_data['receiving_staff'] ?? ''; ?>">
                         </div>
+                        <div class="form-group">
+                            <label for="processor">7.1 Processor Name and Signature</label>
+                            <input type="text" id="processor" name="processor" 
+                                   value="<?php echo $print_data['processor'] ?? ''; ?>">
+                        </div>
+
                     </div>
                     
                     <!-- Return Slip Section -->
@@ -585,6 +591,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <tr>
                             <td class="field-label">7. RECEIVING STAFF IN BEHALF OF THE BORROWER:</td>
                             <td class="field-value" colspan="4"><?php echo htmlspecialchars($print_data['receiving_staff'] ?? ''); ?></td>
+                        </tr>
+                        <tr>
+                            <td class="field-label">7.1 PROCESSOR</td>
+                            <td class="field-value" colspan="4"><?php echo htmlspecialchars($print_data['processor'] ?? ''); ?></td>
                         </tr>
                     </table>
 
