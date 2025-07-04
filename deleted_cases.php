@@ -63,10 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_permanent'])) 
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sidebar Menu | LAIS</title>
+    <title>Archives | LAWS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="img/prc-car.png" sizes="1200x1200"/>
+    <link rel="icon" type="image/png" href="img/prc-logo.png" sizes="1200x1200"/>
     <link href="css/dashboard.css" rel="stylesheet">
     <link rel="stylesheet" href="css/sidebar.css">
     <script src="js/sidebar.js" defer></script>
