@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id'])) {
   exit;
 }
 
-// Generate CSRF token
 if (empty($_SESSION['csrf_token'])) {
   $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
@@ -58,135 +57,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dark Admin Panel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      color: #0f0;
-      font-family: 'Share Tech Mono', monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .panel {
-      background: #111;
-      border: 1px solid #0f0;
-      padding: 30px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 0 10px #0f0;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      text-shadow: 0 0 5px #0f0;
-    }
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      background: #000;
-      color: #0f0;
-      border: 1px solid #0f0;
-    }
-    .toggle-eye {
-      position: relative;
-      cursor: pointer;
-      float: right;
-      margin-top: -30px;
-      margin-right: 10px;
-    }
-    .strength {
-      height: 8px;
-      background: #222;
-      margin-top: 5px;
-    }
-    .strength-bar {
-      height: 8px;
-      background: red;
-      width: 0%;
-      transition: width 0.3s;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #0f0;
-      color: #000;
-      border: none;
-      margin-top: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .message {
-      margin-top: 10px;
-      font-size: 0.9rem;
-    }
-    a {
-      color: #0f0;
-      display: block;
-      margin-top: 15px;
-      text-align: center;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <title>Register Admin | LAIS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/prc-logo.png" sizes="1200x1200"/>
+  <link rel="stylesheet" href="css/sidebar.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
 </head>
 <body>
-  <div class="panel">
-    <h2>Register Admin</h2>
+<div class="container">
+  <!-- Sidebar -->
+  <?php include 'sidebar.php'; ?>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1 class="page-title">Register New Admin</h1>
 
     <?php if ($message): ?>
       <div class="message"><?= htmlspecialchars($message) ?></div>
     <?php endif; ?>
 
-    <form method="POST">
-      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-      <label>Email</label>
-      <input type="email" name="email" required>
+    <div class="form-container">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
 
-      <label>Password</label>
-      <input type="password" name="password" id="password" required>
-      <span class="toggle-eye" onclick="togglePassword('password')">👁</span>
-      <div class="strength"><div id="bar" class="strength-bar"></div></div>
+        <label>Email</label>
+        <input type="email" name="email" required>
 
-      <label>Confirm Password</label>
-      <input type="password" name="confirm" id="confirm" required>
-      <span class="toggle-eye" onclick="togglePassword('confirm')">👁</span>
+        <label>Password</label>
+        <input type="password" name="password" required>
 
-      <button type="submit">Create Admin</button>
-    </form>
+        <label>Confirm Password</label>
+        <input type="password" name="confirm" required>
 
-    <a href="dashboard.php">← Back to Dashboard</a>
+        <button type="submit">💾 Create Admin</button>
+      </form>
+
+      <a href="dashboard.php" class="back-link">⬅ Back to Dashboard</a>
+    </div>
   </div>
+</div>
 
-  <script>
-    function togglePassword(id) {
-      const input = document.getElementById(id);
-      input.type = input.type === "password" ? "text" : "password";
-    }
+<script>
+  // Any JavaScript you want to add goes here.
+</script>
 
-    const passwordInput = document.getElementById("password");
-    const bar = document.getElementById("bar");
-
-    passwordInput.addEventListener("input", function () {
-      const val = passwordInput.value;
-      let score = 0;
-      if (val.length > 6) score++;
-      if (/[A-Z]/.test(val)) score++;
-      if (/[0-9]/.test(val)) score++;
-      if (/[\W]/.test(val)) score++;
-
-      const colors = ["red", "orange", "yellow", "lime"];
-      bar.style.width = (score * 25) + "%";
-      bar.style.background = colors[score - 1] || "red";
-    });
-  </script>
 </body>
 </html>
