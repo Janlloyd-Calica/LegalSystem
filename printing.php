@@ -493,11 +493,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="text" id="receiving_staff" name="receiving_staff" 
                                    value="<?php echo $print_data['receiving_staff'] ?? ''; ?>">
                         </div>
-                        <!--<div class="form-group">
-                            <label for="confirming_staff">7. Receiving Staff</label>
-                            <input type="text" id="receiving_staff" name="receiving_staff" 
-                                   value="<?php echo $print_data['receiving_staff'] ?? ''; ?>">
-                        </div>-->
+                        <div class="form-group">
+                            <label for="processor">7.1 Processor Name and Signature</label>
+                            <input type="text" id="processor" name="processor" 
+                                   value="<?php echo $print_data['processor'] ?? ''; ?>">
+                        </div>
 
                     </div>
                     
@@ -591,6 +591,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <tr>
                             <td class="field-label">7. RECEIVING STAFF IN BEHALF OF THE BORROWER:</td>
                             <td class="field-value" colspan="4"><?php echo htmlspecialchars($print_data['receiving_staff'] ?? ''); ?></td>
+                        </tr>
+                        <tr>
+                            <td class="field-label">7.1 PROCESSOR</td>
+                            <td class="field-value" colspan="4"><?php echo htmlspecialchars($print_data['processor'] ?? ''); ?></td>
                         </tr>
                     </table>
 
